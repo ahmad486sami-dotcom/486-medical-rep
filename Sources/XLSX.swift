@@ -163,8 +163,16 @@ enum Zip {
         var out = Data()
         var central = Data()
         let comps = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: Date())
-        let dosTime = UInt16(((comps.hour ?? 0) << 11) | ((comps.minute ?? 0) << 5) | ((comps.second ?? 0) / 2))
-        let dosDate = UInt16((((comps.year ?? 2026) - 1980) << 9) | ((comps.month ?? 1) << 5) | (comps.day ?? 1))
+        let hour: Int = comps.hour ?? 0
+        let minute: Int = comps.minute ?? 0
+        let second: Int = (comps.second ?? 0) / 2
+        let year: Int = max((comps.year ?? 2026) - 1980, 0)
+        let month: Int = comps.month ?? 1
+        let day: Int = comps.day ?? 1
+        let timeBits: Int = (hour << 11) | (minute << 5) | second
+        let dateBits: Int = (year << 9) | (month << 5) | day
+        let dosTime = UInt16(truncatingIfNeeded: timeBits)
+        let dosDate = UInt16(truncatingIfNeeded: dateBits)
 
         for (name, content) in files {
             let nameData = Data(name.utf8)
