@@ -1,0 +1,5 @@
+build/
+Payload/
+*.ipa
+MedRep486.xcodeproj/
+.DS_Store
